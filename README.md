@@ -1,9 +1,9 @@
-# 📚 Context-Aware Question Answering System
+# RAG Project – Summer Semester 2025
 
-This project is a **retrieval-augmented generation (RAG)** pipeline that allows you to ask natural language questions based on custom documents (e.g., `.txt`, `.md`, `.pdf`). It uses:
+## Overview
 
-* **Sentence Transformers + FAISS** for efficient document retrieval.
-* **T5 (Flan-T5-Base)** for generating natural language answers.
+This project implements a basic Retrieval-Augmented Generation (RAG) system that can answer natural language questions based on provided documents. It combines a document retriever that finds relevant text chunks using semantic similarity, and a generator model (Flan-T5) that generates answers using those chunks as context. The system is modular, easy to extend, and designed to showcase the power of combining retrieval with language generation for question answering tasks.
+
 
 ---
 
@@ -12,10 +12,10 @@ This project is a **retrieval-augmented generation (RAG)** pipeline that allows 
 ```
 .
 ├── baseline/
-│   ├── generator/
-│   │   └── generator.py        # T5 model to generate answer
-│   └── retriever/
-│       └── retriever.py        # Handles document parsing, chunking, embedding, FAISS retrieval
+    ├── generator/
+    │   └── generator.py        # T5 model to generate answer
+    └── retriever/
+        └── retriever.py        # Handles document parsing, chunking, embedding, FAISS retrieval
     ├── data/
         ├── logs.jsonl              # Stores question-answer logs
         └── test_inputs.json        # Test questions
