@@ -2,6 +2,7 @@ from baseline.generator.generator import Generator
 from baseline.retriever.retriever import Retriever
 import json
 from datetime import datetime
+import os
 
 LOG_FILE = "data/logs.jsonl"
 TEST_FILE = "data/test_inputs.json"
@@ -37,7 +38,19 @@ def run_tests(generator, retriever, test_file=TEST_FILE):
 
 if __name__ == "__main__":
     retriever = Retriever()
-    retriever.load("retriever_index")
+
+    # Check if the index already exists
+    if not os.path.exists("retriever_index/data.pkl"):
+        print("❗ Index not found. Creating it from documents...")
+
+        # TODO: Replace with the actual file paths you want to index
+        document_paths = ["retriever/software.json"]
+        retriever.add_documents(document_paths)
+        retriever.save("retriever_index")
+        print("✅ Index built and saved.")
+    else:
+        print("✅ Index found. Loading...")
+        retriever.load("retriever_index")
 
     generator = Generator()
     run_tests(generator, retriever)

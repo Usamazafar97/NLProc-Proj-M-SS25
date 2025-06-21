@@ -1,14 +1,22 @@
 [
   {
-    "question": "When Lion Air Flight 610 crashed?",
-    "answer": "Expected answer from your source documents"
+    "question": "Is Microsoft Office 365 worth the money?",
+    "answer": "Many users say it's a good value, especially for families or multiple devices. One reviewer mentioned, 'Well worth $100 per year, or less than $10 per month.' Another user emphasized, 'You and your buddies have 100 GB of OneDrive to play with... it works.' However, one critical review said, 'Still not worth the money. Buggy, and easily corrupted.' So the perception varies but leans mostly positive."
   },
   {
-    "question": "When Boeing announced the 737 MAX program to compete with Airbus's A320neo?",
-    "answer": "Expected answer from your source documents"
+    "question": "What do users think about Outlook in Microsoft Office?",
+    "answer": "Users have mixed feelings. Some appreciate its usefulness, while others faced problems. One reviewer said, 'Outlook is all messed up,' and mentioned bugs with search and window behavior. Another shared a more positive view, saying, 'The Outlook component... was quickly fixed by the readily-available Microsoft telephone service.'"
   },
   {
-    "question": "When Boeing announced the 737 MAX program to compete with Airbus's A320neo and when Lion Air Flight 610 crashed?",
-    "answer": "Expected answer from your source documents"
+    "question": "Do people find Microsoft Office 365 easy to install and activate?",
+    "answer": "Experiences vary. One satisfied user said, 'Set up took less than 3 minutes.' Another stated, 'It took perhaps two minutes to access the website and enter the license key.' However, a frustrated reviewer said, 'Tried several times... gave up. Life is too short.'"
+  },
+  {
+    "question": "Is Office 365 subscription better than buying standalone software?",
+    "answer": "Many users believe so. One reviewer said, 'Office 365 is a better deal than buying a downloadable, installable product.' Another added, 'It's cheaper, you get more, and you have a lot more options.' Subscription also includes OneDrive storage and access on multiple devices."
+  },
+  {
+    "question": "Is Microsoft Office 365 beginner-friendly?",
+    "answer": "Yes, many users find it accessible. One mentioned, 'The software is well known and excellent. It provides at least ten times the capabilities I need.' Others appreciated features like the 'Watch and Work' mode, while some found documentation lacking: 'Not that easy to understand or install, documentation should be better.'"
   }
 ]
