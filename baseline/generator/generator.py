@@ -8,7 +8,16 @@ class Generator:
 
     def build_prompt(self, context_chunks, question):
         context = "\n".join([chunk['chunk'] for chunk in context_chunks])
-        return f"Context:\n{context}\n\nQuestion: {question}\nAnswer:"
+        return f"""You are a helpful assistant. Use only the information provided in the context to answer the question.
+    .
+
+    Context:
+    {context}
+
+    Question:
+    {question}
+
+    Answer:"""
 
     def generate_answer(self, prompt, max_length=128):
         inputs = self.tokenizer(prompt, return_tensors="pt", truncation=True)

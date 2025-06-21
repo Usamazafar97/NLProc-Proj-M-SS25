@@ -26,15 +26,28 @@ def run_tests(generator, retriever, test_file=TEST_FILE):
 
     for i, test_case in enumerate(test_data):
         question = test_case["question"]
-        retrieved_chunks = retriever.query(question, top_k=3)
+        retrieved_chunks = retriever.query(question, top_k=5)  # You can tune top_k here
+
+        # === Step 2: Print retrieved context ===
+        print(f"\n[{i}] Q: {question}")
+        print("==== Retrieved Context Chunks ====")
+        for j, chunk in enumerate(retrieved_chunks):
+            print(f"[Chunk {j+1}]: {chunk['chunk']}\n")
+        print("==================================")
+
+        # === Prompt + Answer ===
         prompt = generator.build_prompt(retrieved_chunks, question)
         answer = generator.generate_answer(prompt)
 
+        # === Improved Grounding Check ===
+        is_grounded = any(chunk['chunk'].lower() in answer.lower() for chunk in retrieved_chunks)
+
+        # === Logging and Output ===
         log_query(question, retrieved_chunks, prompt, answer, GROUP_ID)
 
-        print(f"[{i}] Q: {question}")
-        print(f"    ➤ Answer: {answer}")
-        print(f"    ✅ Grounded: {any(chunk['chunk'] in answer for chunk in retrieved_chunks)}\n")
+        print(f"➤ Answer: {answer}")
+        print(f"✅ Grounded: {is_grounded}\n")
+
 
 if __name__ == "__main__":
     retriever = Retriever()

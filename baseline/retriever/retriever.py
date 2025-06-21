@@ -50,7 +50,7 @@ class Retriever:
 
     def _extract_priority_fields(self, d):
         """
-        Extract values from priority fields (title, summary, etc.).
+        Extract values from priority fields (summary, reviewText).
         Falls back to flattening the whole dict if none are found.
         """
         values = []
@@ -76,6 +76,9 @@ class Retriever:
         words = text.split()
         return [" ".join(words[i:i + max_tokens]) for i in range(0, len(words), max_tokens)]
 
+    def _preprocess_text(self, text):
+        return text.strip().replace('\n', ' ')
+
     def add_documents(self, file_paths):
         for path in file_paths:
             chunks_or_text = self._read_file(path)
@@ -85,9 +88,19 @@ class Retriever:
             elif isinstance(chunks_or_text, list):  # pre-chunked JSON
                 chunks = []
                 for block in chunks_or_text:
-                    chunks.extend(self._chunk_text(block))  # further split if long
+                    if len(block.split()) > 100:
+                        chunks.extend(self._chunk_text(block))
+                    else:
+                        chunks.append(block)
             else:
                 continue
+
+            # Preprocess text chunks
+            chunks = [self._preprocess_text(c) for c in chunks]
+
+            # Optional debug: Print sample chunk to verify
+            if chunks:
+                print(f"[DEBUG] Sample chunk from {path}: {chunks[0]}\n")
 
             embeddings = self.model.encode(chunks)
 
