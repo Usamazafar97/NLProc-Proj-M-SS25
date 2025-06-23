@@ -5,6 +5,7 @@ import numpy as np
 import faiss
 import pickle
 from sentence_transformers import SentenceTransformer
+from nltk.tokenize import sent_tokenize
 
 class Retriever:
     def __init__(self, model_name='all-MiniLM-L6-v2'):
@@ -44,15 +45,11 @@ class Retriever:
                     print(f"Skipping line due to JSON error: {e}")
                     continue
 
-            return text_chunks  # Return list of strings (each is one chunk)
+            return text_chunks
         else:
             raise ValueError(f"Unsupported file type: {ext}")
 
     def _extract_priority_fields(self, d):
-        """
-        Extract values from priority fields (summary, reviewText).
-        Falls back to flattening the whole dict if none are found.
-        """
         values = []
         for key in self.priority_fields:
             if key in d and isinstance(d[key], str):
@@ -83,9 +80,9 @@ class Retriever:
         for path in file_paths:
             chunks_or_text = self._read_file(path)
 
-            if isinstance(chunks_or_text, str):  # text from .txt, .pdf
+            if isinstance(chunks_or_text, str):
                 chunks = self._chunk_text(chunks_or_text)
-            elif isinstance(chunks_or_text, list):  # pre-chunked JSON
+            elif isinstance(chunks_or_text, list):
                 chunks = []
                 for block in chunks_or_text:
                     if len(block.split()) > 100:
@@ -95,10 +92,8 @@ class Retriever:
             else:
                 continue
 
-            # Preprocess text chunks
             chunks = [self._preprocess_text(c) for c in chunks]
 
-            # Optional debug: Print sample chunk to verify
             if chunks:
                 print(f"[DEBUG] Sample chunk from {path}: {chunks[0]}\n")
 
@@ -119,12 +114,16 @@ class Retriever:
         D, I = self.index.search(np.array(query_embedding), top_k)
 
         results = []
+        max_distance = np.max(D) if np.max(D) != 0 else 1.0  # avoid div-by-zero
         for i in range(top_k):
             idx = I[0][i]
+            distance = float(D[0][i])
+            score = 1 - (distance / max_distance)  # convert distance to similarity-like score
             results.append({
                 'chunk': self.documents[idx],
                 'source': self.chunk_map[idx],
-                'distance': float(D[0][i])
+                'distance': distance,
+                'score': score
             })
         return results
 
