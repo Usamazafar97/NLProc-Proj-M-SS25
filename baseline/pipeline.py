@@ -11,7 +11,7 @@ LOG_FILE = "data/logs.jsonl"
 TEST_FILE = "data/test_inputs.json"
 GROUP_ID = "Team_Turing"
 
-# ✅ New: Metric Computation Function
+# ✅ Metric Computation Function
 def compute_metrics(retrieved_chunks, ground_truth_chunks):
     retrieved_texts = set(chunk['chunk'].strip().lower() for chunk in retrieved_chunks)
     ground_truth_set = set(gt.strip().lower() for gt in ground_truth_chunks)
@@ -26,7 +26,7 @@ def compute_metrics(retrieved_chunks, ground_truth_chunks):
 
     return precision, recall, f1
 
-# ✅ Updated: now accepts optional metrics
+# ✅ Log Query with Metrics
 def log_query(question, retrieved_chunks, prompt, generated_answer, group_id, log_file=LOG_FILE, metrics=None):
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
 
@@ -48,7 +48,7 @@ def log_query(question, retrieved_chunks, prompt, generated_answer, group_id, lo
     with open(log_file, "a") as f:
         f.write(json.dumps(log_entry) + "\n")
 
-# ✅ Updated: show metrics in CLI
+# ✅ CLI Test Mode
 def run_tests(generator, retriever, test_file=TEST_FILE):
     with open(test_file, "r") as f:
         test_data = json.load(f)
@@ -65,7 +65,6 @@ def run_tests(generator, retriever, test_file=TEST_FILE):
         print("==================================")
 
         top_chunks = sorted(retrieved_chunks, key=lambda x: x['score'], reverse=True)[:3]
-
         prompt = generator.build_prompt(top_chunks, question)
         answer = generator.generate_answer(prompt)
         is_grounded = any(chunk['chunk'].lower() in answer.lower() for chunk in retrieved_chunks)
@@ -77,60 +76,68 @@ def run_tests(generator, retriever, test_file=TEST_FILE):
         print(f"✅ Grounded: {is_grounded}")
         print(f"📊 Precision: {precision:.2f} | Recall: {recall:.2f} | F1: {f1:.2f}\n")
 
-# ✅ Updated: metrics displayed in Streamlit
+# ✅ Streamlit Interface
 def run_streamlit_app(generator, retriever):
     st.set_page_config(page_title="QA System", layout="wide")
     st.title("🧠 Amazon's Software Review System")
 
-    question = st.text_input("🔎 Enter your question:")
-    ground_truth_input = st.text_area("✍️ (Optional) Paste expected ground truth chunks here (one per line):")
+    uploaded_file = st.file_uploader("📂 Upload a JSON file", type="json")
 
-    if question:
-        with st.spinner("Processing..."):
-            retrieved_chunks = retriever.query(question, top_k=5)
-            top_chunks = sorted(retrieved_chunks, key=lambda x: x['score'], reverse=True)[:3]
-            prompt = generator.build_prompt(top_chunks, question)
-            answer = generator.generate_answer(prompt)
-            is_grounded = any(chunk['chunk'].lower() in answer.lower() for chunk in retrieved_chunks)
+    if uploaded_file:
+        st.success("✅ File uploaded successfully!")
 
-            # ✅ Metric calculation if user provides ground truth
-            if ground_truth_input.strip():
-                ground_truth_chunks = [line.strip() for line in ground_truth_input.split("\n") if line.strip()]
-                precision, recall, f1 = compute_metrics(retrieved_chunks, ground_truth_chunks)
-                metrics = (precision, recall, f1)
-            else:
-                metrics = None
+        # Read the uploaded JSON file
+        uploaded_json = [json.loads(line) for line in uploaded_file]
 
-            log_query(question, retrieved_chunks, prompt, answer, GROUP_ID, metrics=metrics)
+        # Save to a temporary path if needed by your retriever
+        temp_json_path = "data/temp_uploaded.json"
+        with open(temp_json_path, "w") as f:
+            json.dump(uploaded_json, f)
 
-        st.subheader("📖 Retrieved Chunks")
-        for i, chunk in enumerate(top_chunks):
-            st.markdown(f"**Chunk {i+1} (Score: {chunk['score']:.2f}):**\n> {chunk['chunk']}")
+        # Rebuild retriever index from uploaded JSON
+        retriever.clear_index()
+        retriever.add_documents([temp_json_path])
+        st.info("🔄 Index rebuilt from uploaded file.")
 
-        st.subheader("📜 Prompt Used")
-        with st.expander("Click to view prompt"):
-            st.text(prompt)
+        # Ask question
+        question = st.text_input("🔎 Enter your question:")
 
-        st.subheader("🧠 Generated Answer")
-        st.success(answer)
-        st.markdown(f"**Grounded Answer:** {'✅ Yes' if is_grounded else '❌ No'}")
+        if question:
+            with st.spinner("Processing..."):
+                retrieved_chunks = retriever.query(question, top_k=5)
+                top_chunks = sorted(retrieved_chunks, key=lambda x: x['score'], reverse=True)[:3]
+                prompt = generator.build_prompt(top_chunks, question)
+                answer = generator.generate_answer(prompt)
+                is_grounded = any(chunk['chunk'].lower() in answer.lower() for chunk in retrieved_chunks)
 
-        if metrics:
-            precision, recall, f1 = metrics
-            st.subheader("📊 Evaluation Metrics")
-            st.metric("Precision", f"{precision:.2f}")
-            st.metric("Recall", f"{recall:.2f}")
-            st.metric("F1 Score", f"{f1:.2f}")
+                log_query(question, retrieved_chunks, prompt, answer, GROUP_ID)
 
+            st.subheader("📖 Retrieved Chunks")
+            for i, chunk in enumerate(top_chunks):
+                st.markdown(f"**Chunk {i+1} (Score: {chunk['score']:.2f}):**\n> {chunk['chunk']}")
+
+            st.subheader("📜 Prompt Used (optional)")
+            with st.expander("Click to view prompt"):
+                st.text(prompt)
+
+            st.subheader("🧠 Generated Answer")
+            st.success(answer)
+            st.markdown(f"**Grounded Answer:** {'✅ Yes' if is_grounded else '❌ No'}")
+    else:
+        st.warning("📄 Please upload a JSON file to begin.")
+
+
+# ✅ Main entry
 if __name__ == "__main__":
     index_folder = "retriever_index"
 
+    # Rebuild index for fresh start
     if os.path.exists(index_folder) and os.path.isdir(index_folder):
         shutil.rmtree(index_folder)
-        print(f"Deleted existing index folder: {index_folder}")
+        print(f"🗑️ Deleted existing index folder: {index_folder}")
 
     retriever = Retriever()
-    print("❗ Index not found. Creating it from documents...")
+    print("📦 Index not found. Creating it from documents...")
     retriever_dir = os.path.dirname(os.path.abspath(__file__))
     software_file_path = os.path.join(retriever_dir, "retriever", "software.json")
     document_paths = [software_file_path]
@@ -140,6 +147,8 @@ if __name__ == "__main__":
 
     generator = Generator()
 
-    # Decide between CLI or Streamlit based on how it's called
-    run_streamlit_app(generator, retriever)
-    # run_tests(generator, retriever)
+    # Choose between CLI or Streamlit based on how the script is called
+    if len(sys.argv) > 1 and sys.argv[1] == "--cli":
+        run_tests(generator, retriever)
+    else:
+        run_streamlit_app(generator, retriever)

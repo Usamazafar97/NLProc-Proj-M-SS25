@@ -149,3 +149,8 @@ class Retriever:
         self.model = SentenceTransformer(self.model_name)
         self.dimension = self.model.get_sentence_embedding_dimension()
         self.index = faiss.read_index(os.path.join(path, 'faiss.index'))
+
+
+    def clear_index(self):
+        self.index = []  # or however, your index is stored
+
