@@ -101,6 +101,7 @@ def run_streamlit_app(generator, retriever):
 
         # Ask question
         question = st.text_input("🔎 Enter your question:")
+        ground_truth_input = st.text_area("✍️ (Optional) Paste expected ground truth chunks here (one per line):")
 
         if question:
             with st.spinner("Processing..."):
@@ -109,6 +110,14 @@ def run_streamlit_app(generator, retriever):
                 prompt = generator.build_prompt(top_chunks, question)
                 answer = generator.generate_answer(prompt)
                 is_grounded = any(chunk['chunk'].lower() in answer.lower() for chunk in retrieved_chunks)
+
+                # ✅ Compute metrics if ground truth is provided
+                if ground_truth_input.strip():
+                    ground_truth_chunks = [line.strip() for line in ground_truth_input.split("\n") if line.strip()]
+                    precision, recall, f1 = compute_metrics(retrieved_chunks, ground_truth_chunks)
+                    metrics = (precision, recall, f1)
+                else:
+                    metrics = None
 
                 log_query(question, retrieved_chunks, prompt, answer, GROUP_ID)
 
@@ -123,6 +132,12 @@ def run_streamlit_app(generator, retriever):
             st.subheader("🧠 Generated Answer")
             st.success(answer)
             st.markdown(f"**Grounded Answer:** {'✅ Yes' if is_grounded else '❌ No'}")
+
+            if metrics:
+                st.subheader("📊 Evaluation Metrics")
+                st.metric("Precision", f"{metrics[0]:.2f}")
+                st.metric("Recall", f"{metrics[1]:.2f}")
+                st.metric("F1 Score", f"{metrics[2]:.2f}")
     else:
         st.warning("📄 Please upload a JSON file to begin.")
 
