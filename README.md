@@ -7,6 +7,21 @@ This project implements a basic Retrieval-Augmented Generation (RAG) system that
 
 ---
 
+# Specialization Module
+
+**Usage Notice:**
+
+Please use only the enhanced versions of the following components in this directory:
+
+- `enhanced_generator.py` (Generator)
+- `enhanced_pipeline.py` (Pipeline)
+- `enhanced_retriever.py` (Retriever)
+
+These files are located in their respective subdirectories under `specialization/baseline/`.
+
+Other versions are present for reference or legacy purposes and should not be used for current work.
+---
+
 ## 📦 Project Structure
 
 ```
