@@ -1,0 +1,45 @@
+[
+  {
+    "question": "Based on reviews, Summarize what users are saying about Microsoft Office 365?",
+    "parameters": {
+      "top_k": 15,
+      "sentiment_filter": null
+    },
+    "answer": "Many users say it's a good value, especially for families or multiple devices. One reviewer mentioned, 'Well worth $100 per year, or less than $10 per month.' ..."
+  },
+  {
+    "question": "What problems do users face with photoshop?",
+    "parameters": {
+      "top_k": 15,
+      "sentiment_filter": "negative",
+      "min_confidence": 0.6
+    },
+    "answer": "Some users report the interface is troubled by poor design and the controls are not intuitive."
+  },
+  {
+    "question": "What positive experiences do customers about photoshop?",
+    "parameters": {
+      "top_k": 15,
+      "sentiment_filter": "positive",
+      "min_rating": 4.0
+    },
+    "answer": "Photoshop is praised as an industry standard for image editing, creative manipulation, and compositing."
+  },
+  {
+    "question": "How is the installation process for photoshop?",
+    "parameters": {
+      "top_k": 15,
+      "sentiment_filter": null
+    },
+    "answer": "The installation process is quite easy, and the software is very user-friendly."
+  },
+  {
+    "question": "Is this photoshop worth the money?",
+    "parameters": {
+      "top_k": 15,
+      "sentiment_filter": null,
+      "min_rating": 3.0
+    },
+    "answer": "Photoshop Elements is a great alternative for those who don't want to pay for Photoshop."
+  }
+]
