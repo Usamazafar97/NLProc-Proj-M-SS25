@@ -1,0 +1,27 @@
+# Enhanced RAG System Requirements
+# Core dependencies
+transformers>=4.30.0
+torch>=2.0.0
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.0
+PyMuPDF>=1.23.0
+scikit-learn>=1.3.0
+numpy>=1.24.0
+
+# Enhanced features
+# For sentiment analysis
+# Note: cardiffnlp/twitter-roberta-base-sentiment-latest will be downloaded automatically
+
+# For better text processing
+regex>=2023.0.0
+
+# For enhanced logging and data handling
+pandas>=2.0.0
+
+# Optional: For GPU acceleration (uncomment if you have CUDA)
+# torch>=2.0.0+cu118 --index-url https://download.pytorch.org/whl/cu118
+
+# Development dependencies (optional)
+# jupyter>=1.0.0
+# matplotlib>=3.7.0
+# seaborn>=0.12.0 

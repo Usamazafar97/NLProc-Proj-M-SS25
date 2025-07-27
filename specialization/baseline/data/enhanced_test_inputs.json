@@ -1,0 +1,52 @@
+[
+  {
+    "question": "How is Lewis Hamilton feeling about the new Mercedes car?",
+    "parameters": {"top_k": 5},
+    "answer": "Initial set up was easy and accessing files from different devices has worked smoothly."
+  },
+  {
+    "question": "What are the positive experiences with Microsoft Office?",
+    "parameters": {"top_k": 5, "sentiment_filter": "positive"},
+    "answer": "MS Office is a great set of tools I loved it the first year I used it and continue to feel likewise with this newest version."
+  },
+  {
+    "question": "What negative experiences do users report with Microsoft Office?",
+    "parameters": {"top_k": 5, "sentiment_filter": "negative"},
+    "answer": "Overpriced and buggy as hell but it mostly works."
+  },
+  {
+    "question": "What do users like about Sage 50 Premium Accounting?",
+    "parameters": {"top_k": 5, "sentiment_filter": "positive"},
+    "answer": "Sage 50 Premium Accounting is a good choice for small business owners who need reliable accounting software, but do not need an actual accountant or financial person to keep tabs on things."
+  },
+  {
+    "question": "What complaints do users have about Corel PaintShop Pro X8?",
+    "parameters": {"top_k": 5, "sentiment_filter": "negative"},
+    "answer": "Customer Reviews: Horrible. And Corel just lost a lifetime customer"
+  },
+  {
+    "question": "What do users say about TurboTax software?",
+    "parameters": {"top_k": 5},
+    "answer": "Five Stars. Turbo Tax best software I have found"
+  },
+  {
+    "question": "What are the main features of Sage 50 Premium Accounting mentioned by reviewers?",
+    "parameters": {"top_k": 5},
+    "answer": "Sage 50 Premium Accounting 2016 provides at-a-glance dashboards and management centers, plus budget and analysis tools to help you make confident decisions."
+  },
+  {
+    "question": "What do users say about the value of Adobe Creative Cloud?",
+    "parameters": {"top_k": 5},
+    "answer": "There is some upside though users benefit from major releases without having to buy the software all over again."
+  },
+  {
+    "question": "What are the positive experiences with Corel PaintShop Pro X8?",
+    "parameters": {"top_k": 5, "sentiment_filter": "positive"},
+    "answer": "Worth it for the ability to add Photoshop ABR brushes."
+  },
+  {
+    "question": "What do users say about the usefulness of LibreOffice?",
+    "parameters": {"top_k": 5},
+    "answer": "It is fairly intuitive and one isn't paying for a truckload of bells and whistles one will never use."
+  }
+]
